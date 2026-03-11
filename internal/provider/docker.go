@@ -40,7 +40,8 @@ type dockerDFRow struct {
 }
 
 // CurrentSize returns actual Docker data usage from docker system df.
-// Falls back to path-based size if docker system df fails.
+// Falls back to path-based size on any error (daemon stopped, timeouts,
+// permission issues) so status always reports something useful.
 func (p *DockerProvider) CurrentSize() (int64, error) {
 	if b, err := p.dockerDataSize(); err == nil {
 		return b, nil
